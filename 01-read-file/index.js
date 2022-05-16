@@ -1,8 +1,23 @@
 'use strict';
+// const fs = require('fs');
+// const path = require('path');
+// const file = path.join('01-read-file', 'text.txt');
+// fs.readFile(`${file}`, 'utf8', (err, data) => {
+//   if (err) throw err;
+//   console.log(data);
+// });
+
+
+
 const fs = require('fs');
 const path = require('path');
 const file = path.join('01-read-file', 'text.txt');
-fs.readFile(`${file}`, 'utf8', (err, data) => {
-  if (err) throw err;
-  console.log(data);
+const stream = new fs.ReadStream(file, { encoding: 'utf8' });
+stream.on('readable', () => {
+  let data = stream.read();
+  if (data !== null) console.log(data);
+});
+
+stream.on('end', () => {
+  console.log('Все!');
 });
