@@ -1,13 +1,14 @@
 
 const fs = require('fs');
 const readline = require('readline');
+const path = require('path');
 
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
 
-let fileText = fs.createWriteStream('.\\file.txt');
+let fileText = fs.createWriteStream(path.join('02-write-file', 'text.txt'));
 
 function write() {
 
@@ -17,7 +18,7 @@ function write() {
       rl.close();
       return;
     }
-    fileText.write(text, err => {
+    fileText.write(text + '\n', err => {
       if (err) {
         console.log(err.message);
       } else {
