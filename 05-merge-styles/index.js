@@ -5,66 +5,56 @@ const path = require('path');
 // const fsPromises = fs.promises;
 
 
+
+
+
+
 const bundle = path.join(__dirname, 'project-dist', 'bundle.css');
 
-const folder = path.join(__dirname);
+const folder = path.join(__dirname, 'styles');
 function write(folder) {
-  fs.readdir(folder, (err, data) => {
-    if (err) console.error(err.message);
-    data.forEach(item => {
-      const itemFolder = path.join(folder, `${item}`);
+  fs.access(bundle, fs.F_OK, (err) => {
+    if (err) {
+      fs.readdir(folder, (err, data) => {
+        if (err) console.error(err.message);
+        data.forEach(item => {
+          const itemFolder = path.join(folder, `${item}`);
 
-      fs.stat(itemFolder, (error, stats) => {
-        if (error) {
-          console.log(error);
+          fs.stat(itemFolder, (error, stats) => {
+            if (error) {
+              console.log(error);
 
-        } else {
-          if (!stats.isFile()) {
-            // console.log(itemFolder);
-            write(itemFolder);
-          } else {
-            if (path.extname(itemFolder) === '.css') {
-              console.log(path.extname(itemFolder));
+            } else {
+              if (!stats.isFile()) {
+                write(itemFolder);
+              } else {
+                if (path.extname(itemFolder) === '.css') {
 
-              fs.readFile(itemFolder, 'utf8', function (err, data) {
-                // st += data;
-                if (!err) {
-                  fs.writeFile(bundle, data, function (err) {
-                    if (err) {
-                      console.log('ошибка записи файла');
+                  fs.readFile(itemFolder, 'utf8', function (err, data) {
+                    if (!err) {
+
+                      const ws = fs.createWriteStream(bundle, {
+                        flags: 'a+'
+                      });
+                      ws.write(data);
+                    } else {
+                      console.log('ошибка чтения файла');
                     }
                   });
-                } else {
-                  console.log('ошибка чтения файла');
+
+
                 }
-              });
-
-
-
-              // console.log(itemFolder);
-
-              //   let textread = fs.createReadStream(itemFolder);
-              //   let text = fs.createWriteStream(bundle);
-              //   text.write(textread);
-              //   textread.pipe(text);
-              //   textread.on('datatext', datatext => {
-              //     text.write(datatext, err => {
-              //       if (err) {
-              //         console.error(err.message);
-              //       } else {
-              //         console.log('good');
-
-              //       }
-              //     });
-
-              //   });
-
+              }
             }
-          }
-        }
-      });
+          });
 
-    });
+        });
+      });
+    } else {
+      fs.unlink(bundle, () => {
+        write(folder);
+      });
+    }
   });
 }
 
