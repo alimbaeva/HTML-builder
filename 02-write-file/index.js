@@ -15,6 +15,7 @@ function write() {
   rl.question('Что небудь напишите-', text => {
     console.log(text);
     if (text.toLocaleLowerCase() === 'exit') {
+      console.log("Пока!!");
       rl.close();
       return;
     }

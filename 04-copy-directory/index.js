@@ -5,18 +5,37 @@ const fsPromises = fs.promises;
 
 
 const pathFile = path.join(path.join(__dirname), 'files-copy');
-fs.stat(pathFile, (error) => {
-  if (error) {
-    console.log('error');
-    fsPromises.mkdir(pathFile).then(function () {
-      console.log('Directory created successfully');
-    }).catch(function () {
-      console.log('failed to create directory');
-    });
+create(pathFile);
+function create(pathFile) {
 
-  }
-  copy();
-});
+  fs.stat(pathFile, (error) => {
+    if (error) {
+      console.log('error');
+      fsPromises.mkdir(pathFile).then(function () {
+        console.log('Directory created successfully');
+      }).catch(function () {
+        console.log('failed to create directory');
+      });
+      copy();
+
+    } else {
+      fs.readdir(pathFile, (err, data) => {
+        if (err) console.error(err.message);
+        data.forEach(file => {
+          fs.unlink(`${__dirname}/files-copy/${file}`, (err) => {
+            if (err) throw err;
+          });
+        });
+      });
+
+
+      fs.rmdir(pathFile, (err) => {
+        if (err) console.error(err.message);
+        create(pathFile);
+      });
+    }
+  });
+}
 
 
 function copy() {
