@@ -43,20 +43,23 @@ fs.readdir(folderHtml, (err, datas) => {
 
 const folderStyles = path.join(__dirname, 'styles');
 fs.readdir(folderStyles, (err, data) => {
-  //   console.log(data);
+  if (err) console.error(err.message);
   data.forEach(file => {
-    const itemFolder = path.join(folderStyles, `${file}`);
-    fs.readFile(itemFolder, 'utf8', function (err, data) {
-      if (!err) {
+    if (path.extname(file) === '.css') {
+      const itemFolder = path.join(folderStyles, `${file}`);
+      fs.readFile(itemFolder, 'utf8', function (err, data) {
+        if (!err) {
 
-        const ws = fs.createWriteStream(mainFolderstyle, {
-          flags: 'a+'
-        });
-        ws.write(data);
-      } else {
-        console.log('ошибка чтения файла');
-      }
-    });
+          const ws = fs.createWriteStream(mainFolderstyle, {
+            flags: 'a+'
+          });
+          ws.write(data + '\n');
+        } else {
+          console.log('ошибка чтения файла');
+        }
+      });
+
+    }
 
   });
 });
@@ -113,7 +116,7 @@ function readFolders(derictory) {
           // console.log(f2, '=========f2');
           try {
             fsPromises.copyFile(f1, f2);
-            console.log('Good job');
+            // console.log('Good job');
           } catch {
             console.log('The file could not be copied');
           }

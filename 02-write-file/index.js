@@ -10,12 +10,19 @@ const rl = readline.createInterface({
 
 let fileText = fs.createWriteStream(path.join('02-write-file', 'text.txt'));
 
+readline.emitKeypressEvents(process.stdin);
+process.stdin.on('keypress', (ch, key) => {
+  if (key && key.ctrl && key.name == 'c') {
+    console.log('\nПока!! Вы пожелали выйти и остановить запись!');
+  }
+});
+
 function write() {
 
   rl.question('Что небудь напишите-', text => {
     console.log(text);
     if (text.toLocaleLowerCase() === 'exit') {
-      console.log("Пока!!");
+      console.log('\nПока!! Вы пожелали выйти и остановить запись!');
       rl.close();
       return;
     }

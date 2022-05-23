@@ -36,7 +36,7 @@ function write(folder) {
                       const ws = fs.createWriteStream(bundle, {
                         flags: 'a+'
                       });
-                      ws.write(data);
+                      ws.write(data + '\n');
                     } else {
                       console.log('ошибка чтения файла');
                     }
