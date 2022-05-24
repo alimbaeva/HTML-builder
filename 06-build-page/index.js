@@ -17,7 +17,6 @@ fsPromises.mkdir(mainFolder).then(function () {
 
 const folderHtml = path.join(__dirname, 'components');
 fs.readdir(folderHtml, (err, datas) => {
-  //   console.log(datas);
 
   fs.readFile(path.join(__dirname, 'template.html'), 'utf8', function (err, data) {
     if (!err) {
@@ -27,7 +26,6 @@ fs.readdir(folderHtml, (err, datas) => {
           fs.readFile(fileNamehtml, 'utf8', function (err, data2) {
             const ws = fs.createWriteStream(mainFolderindex);
             data = data.replace(`{{${path.parse(fileNamehtml).name}}}`, data2);
-            //   console.log(data);
             ws.write(data);
           });
 
@@ -43,7 +41,6 @@ fs.readdir(folderHtml, (err, datas) => {
 
 const folderStyles = path.join(__dirname, 'styles');
 fs.readdir(folderStyles, (err, data) => {
-  if (err) console.error(err.message);
   data.forEach(file => {
     if (path.extname(file) === '.css') {
       const itemFolder = path.join(folderStyles, `${file}`);
@@ -74,7 +71,6 @@ createFolder(mainfolderAssets);
 function createFolder(fol) {
   fs.stat(fol, (error) => {
     if (error) {
-      console.log('error');
       fsPromises.mkdir(fol).then(function () {
         console.log('Directory created successfully');
       }).catch(function () {
@@ -93,30 +89,23 @@ readFolders(folderAssets);
 function readFolders(derictory) {
 
   fs.readdir(derictory, (err, data) => {
-    if (err) console.error(err.message);
-    // console.log(data);
     data.forEach(el => {
       const folder = path.join(derictory, `${el}`);
       fs.stat(folder, (error, stats) => {
-        if (error) console.error(error.message);
         if (!stats.isFile()) {
-          // console.log('folder-------', folder);
           fs.stat(path.join(mainfolderAssets, `${el}`), (error) => {
-            if (error) console.error(error.message);
-            // console.log('нету');
-            createFolder(path.join(mainfolderAssets, `${el}`));
+            if (error){
+              createFolder(path.join(mainfolderAssets, `${el}`));
+
+            }
           });
           readFolders(folder);
         } else {
-          // console.log('file-------', folder);
           let f1 = path.join(folder);
           let f2 = path.join(mainfolderAssets, path.dirname(folder).split('\\')[path.dirname(folder).split('\\').length - 1], `${path.basename(folder)}`);
 
-          // console.log(f1, '=========f1');
-          // console.log(f2, '=========f2');
           try {
             fsPromises.copyFile(f1, f2);
-            // console.log('Good job');
           } catch {
             console.log('The file could not be copied');
           }

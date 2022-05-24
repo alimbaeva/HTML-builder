@@ -30,7 +30,7 @@ function create(pathFile) {
 
 
       fs.rmdir(pathFile, (err) => {
-        if (err)console.log("delete folder and");
+        if (err)console.log('delete folder and');
         create(pathFile);
       });
     }
