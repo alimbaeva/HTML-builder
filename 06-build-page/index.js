@@ -11,7 +11,6 @@ const mainFolderstyle = path.join(__dirname, 'project-dist', 'style.css');
 fsPromises.mkdir(mainFolder).then(function () {
   console.log('Directory created successfully');
 }).catch(function () {
-  console.log('failed to create directory');
 });
 
 
@@ -101,8 +100,9 @@ function readFolders(derictory) {
           });
           readFolders(folder);
         } else {
+          let pathfolder=path.join(path.basename(path.dirname(folder)), `${path.basename(folder)}`);
           let f1 = path.join(folder);
-          let f2 = path.join(mainfolderAssets, path.dirname(folder).split('\\')[path.dirname(folder).split('\\').length - 1], `${path.basename(folder)}`);
+          let f2 = path.join(mainfolderAssets, pathfolder);
 
           try {
             fsPromises.copyFile(f1, f2);
